@@ -23,7 +23,7 @@ Simple app that uses the new android Jetpack Compose built on top of an MVI arch
 <br/>
 
 
-## Libraries
+- ## Libraries
 
     - Hilt Depencey Injection
     - Coil for loading images
