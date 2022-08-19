@@ -12,22 +12,21 @@
 Simple app that uses the new android Jetpack Compose built on top of an MVI architecture 
 
 
-
-
-</br>
-
-## How To Run
-
-
-
-<br/>
-
-
 - ## Libraries
 
     - Hilt Depencey Injection
     - Coil for loading images
     - Retrofit for network calls
+
+
+<br/>
+
+
+![](images/recipeapp.png)
+
+
+
+<br/>
 
 
 
