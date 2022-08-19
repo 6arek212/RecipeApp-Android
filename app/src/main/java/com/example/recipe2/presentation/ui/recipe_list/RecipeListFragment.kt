@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.horizontalScroll
@@ -33,18 +34,23 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.example.recipe2.R
+import com.example.recipe2.presentation.BaseApplication
 import com.example.recipe2.presentation.components.CircularProgressBar
 import com.example.recipe2.presentation.components.FoodCategoryChip
 import com.example.recipe2.presentation.components.RecipeCard
 import com.example.recipe2.presentation.components.SearchAppBar
+import com.example.recipe2.presentation.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 private const val TAG = "RecipeListFragment"
 
 @AndroidEntryPoint
 class RecipeListFragment : Fragment() {
 
+    @Inject
+    lateinit var application: BaseApplication
 
     val viewModel: RecipeListViewModel by viewModels()
 
@@ -56,47 +62,58 @@ class RecipeListFragment : Fragment() {
 
         return ComposeView(requireContext()).apply {
             setContent {
-                val recipes = viewModel.recipes.value
-                val query = viewModel.query.value
-                val selectedCategory = viewModel.selectedCategory.value
-                val isLoading = viewModel.loading.value
+                AppTheme(darkTheme = application.isDark.value) {
 
-                val listState = rememberLazyListState()
+                    val recipes = viewModel.recipes.value
+                    val query = viewModel.query.value
+                    val selectedCategory = viewModel.selectedCategory.value
+                    val isLoading = viewModel.loading.value
 
-
-                Column {
-
-                    SearchAppBar(
-                        query = query,
-                        onQueryChanged = viewModel::onQueryChanged,
-                        onTriggerEvent = viewModel::onTriggerEvent,
-                        categoryScrollPosition = viewModel.categoryScrollPosition,
-                        selectedCategory = selectedCategory,
-                        onSelectedCategoryChange = viewModel::onSelectedCategoryChange,
-                        onChangeCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition,
-                        listState = listState
-                    )
-
-                    Spacer(modifier = Modifier.padding(10.dp))
+                    val listState = rememberLazyListState()
 
 
-                    Box(
-                        modifier = Modifier.fillMaxSize()
+                    Column(
+                        modifier = Modifier.background(color = MaterialTheme.colors.background)
                     ) {
-                        LazyColumn(state = listState) {
-                            itemsIndexed(
-                                items = recipes
-                            ) { index, recipe ->
-                                RecipeCard(recipe = recipe, onClick = {})
+
+                        SearchAppBar(
+                            query = query,
+                            onQueryChanged = viewModel::onQueryChanged,
+                            onTriggerEvent = viewModel::onTriggerEvent,
+                            categoryScrollPosition = viewModel.categoryScrollPosition,
+                            selectedCategory = selectedCategory,
+                            onSelectedCategoryChange = viewModel::onSelectedCategoryChange,
+                            onChangeCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition,
+                            listState = listState,
+                            onToggleTheme = {
+                                application.toggleTheme()
                             }
+                        )
+
+                        Spacer(modifier = Modifier.padding(10.dp))
+
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+
+                        ) {
+                            LazyColumn(state = listState) {
+                                itemsIndexed(
+                                    items = recipes
+                                ) { index, recipe ->
+                                    RecipeCard(recipe = recipe, onClick = {})
+                                }
+                            }
+
+                            CircularProgressBar(isDisplayed = isLoading)
                         }
-
-                        CircularProgressBar(isDisplayed = isLoading)
                     }
-                }
 
+                }
             }
         }
+
 
     }
 

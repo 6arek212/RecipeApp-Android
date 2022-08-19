@@ -11,14 +11,17 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.recipe2.presentation.ui.recipe_list.FoodCategory
 import com.example.recipe2.presentation.ui.recipe_list.RecipeListEvents
 import kotlinx.coroutines.launch
@@ -33,8 +36,8 @@ fun SearchAppBar(
     selectedCategory: FoodCategory?,
     onSelectedCategoryChange: (String) -> Unit,
     onChangeCategoryScrollPosition: (Int) -> Unit,
-    listState: LazyListState
-
+    listState: LazyListState,
+    onToggleTheme: () -> Unit
 ) {
     val categoryScrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
@@ -42,7 +45,7 @@ fun SearchAppBar(
 
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        color = MaterialTheme.colors.primary,
+        color = MaterialTheme.colors.surface,
         elevation = 8.dp,
     ) {
 
@@ -78,11 +81,29 @@ fun SearchAppBar(
                         onTriggerEvent(RecipeListEvents.NewSearch())
                         focusManager.clearFocus()
                     }),
+                    textStyle = MaterialTheme.typography.body1,
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = MaterialTheme.colors.surface,
                         textColor = MaterialTheme.colors.onSurface,
                     ),
                 )
+
+
+
+                ConstraintLayout(modifier = Modifier.align(Alignment.CenterVertically)) {
+                    val menu = createRef()
+                    IconButton(onClick = onToggleTheme,
+                        modifier = Modifier.constrainAs(menu) {
+                            end.linkTo(parent.end)
+                            top.linkTo(parent.top)
+                            bottom.linkTo(parent.bottom)
+                        }) {
+
+                        Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "")
+                    }
+                }
+
+
             }
 
 
