@@ -1,47 +1,28 @@
 package com.example.recipe2.presentation.ui.recipe_list
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
-import com.example.recipe2.R
+import androidx.navigation.fragment.findNavController
 import com.example.recipe2.presentation.BaseApplication
 import com.example.recipe2.presentation.components.CircularProgressBar
-import com.example.recipe2.presentation.components.FoodCategoryChip
 import com.example.recipe2.presentation.components.RecipeCard
+import com.example.recipe2.presentation.components.RecipeList
 import com.example.recipe2.presentation.components.SearchAppBar
 import com.example.recipe2.presentation.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val TAG = "RecipeListFragment"
@@ -70,6 +51,7 @@ class RecipeListFragment : Fragment() {
                     val isLoading = viewModel.loading.value
 
                     val listState = rememberLazyListState()
+                    val page = viewModel.page.value
 
 
                     Column(
@@ -79,7 +61,7 @@ class RecipeListFragment : Fragment() {
                         SearchAppBar(
                             query = query,
                             onQueryChanged = viewModel::onQueryChanged,
-                            onTriggerEvent = viewModel::onTriggerEvent,
+                            onNewSearch = { viewModel.onTriggerEvent(RecipeListEvent.NewSearch) },
                             categoryScrollPosition = viewModel.categoryScrollPosition,
                             selectedCategory = selectedCategory,
                             onSelectedCategoryChange = viewModel::onSelectedCategoryChange,
@@ -92,22 +74,17 @@ class RecipeListFragment : Fragment() {
 
                         Spacer(modifier = Modifier.padding(10.dp))
 
+                        RecipeList(
+                            isLoading = isLoading,
+                            recipes = recipes,
+                            page = page,
+                            onChangeRecipeScrollPos = viewModel::onChangeRecipeScrollPos,
+                            onNextPage = { viewModel.onTriggerEvent(RecipeListEvent.NextPageEvent) },
+                            listState = listState,
+                            navController = findNavController()
+                        )
 
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
 
-                        ) {
-                            LazyColumn(state = listState) {
-                                itemsIndexed(
-                                    items = recipes
-                                ) { index, recipe ->
-                                    RecipeCard(recipe = recipe, onClick = {})
-                                }
-                            }
-
-                            CircularProgressBar(isDisplayed = isLoading)
-                        }
                     }
 
                 }

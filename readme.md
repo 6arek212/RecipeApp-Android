@@ -21,9 +21,15 @@ Simple app that uses the new android Jetpack Compose built on top of an MVI arch
 
 <br/>
 
+![](images/main_page.png)
 
-![](images/recipeapp.png)
+<br/>
 
+![](images/main_page_dark.png)
+
+<br/>
+
+![](images/details_page.png)
 
 
 <br/>

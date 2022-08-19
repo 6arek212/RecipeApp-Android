@@ -17,11 +17,12 @@ import androidx.constraintlayout.compose.ConstraintLayout
 @Composable
 fun CircularProgressBar(
     isDisplayed: Boolean,
+    modifier: Modifier = Modifier
 ) {
     if (isDisplayed) {
 
 
-        ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+        ConstraintLayout(modifier = modifier.fillMaxSize()) {
             val (progressBar, text) = createRefs()
             //val guideline = createGuidelineFromTop(0.3f)
 

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Snackbar
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +28,6 @@ fun FoodCategoryChip(
         shape = MaterialTheme.shapes.medium,
         color = if (isSelected) Color.LightGray else MaterialTheme.colors.primary
     ) {
-
         Row(
             modifier = Modifier
                 .toggleable(

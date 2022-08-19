@@ -23,7 +23,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.recipe2.presentation.ui.recipe_list.FoodCategory
-import com.example.recipe2.presentation.ui.recipe_list.RecipeListEvents
+import com.example.recipe2.presentation.ui.recipe_list.RecipeListEvent
 import kotlinx.coroutines.launch
 
 
@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 fun SearchAppBar(
     query: String,
     onQueryChanged: (String) -> Unit,
-    onTriggerEvent: (RecipeListEvents) -> Unit,
+    onNewSearch: () -> Unit,
     categoryScrollPosition: Int,
     selectedCategory: FoodCategory?,
     onSelectedCategoryChange: (String) -> Unit,
@@ -78,7 +78,7 @@ fun SearchAppBar(
                         )
                     },
                     keyboardActions = KeyboardActions(onSearch = {
-                        onTriggerEvent(RecipeListEvents.NewSearch())
+                        onNewSearch()
                         focusManager.clearFocus()
                     }),
                     textStyle = MaterialTheme.typography.body1,
@@ -121,7 +121,7 @@ fun SearchAppBar(
                     FoodCategoryChip(
                         category = category.value,
                         onExecuteSearch = {
-                            onTriggerEvent(RecipeListEvents.NewSearch())
+                            onNewSearch()
                             coroutineScope.launch {
                                 listState.animateScrollToItem(index = 0)
                             }
